@@ -1,13 +1,17 @@
-function importAll(r) {
-  let images = {};
-  r.keys().forEach((item, index) => {
-    images[item.replace('./', '')] = r(item);
+//turns array items into an objects with keys matching their filename.
+function importAll(arr) {
+  let image = {};
+  arr.keys().forEach((item, index) => {
+    image[item.replace('./', '')] = arr(item);
   });
-  return images;
+  return image;
 }
 
+//require.contexts gives us 3 arguments: a search directory, subdirectory search flag, and regex to match files against.
+//Here, it'll return an array of images.
+//We then pass that array to importAll.
 const images = importAll(
-  require.context('../assets', false, /\.(png|jpe?g|svg)$/)
+  require.context('../assets/images', false, /\.(png|jpe?g|svg)$/)
 );
 
 const cards = [
