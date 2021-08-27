@@ -1,9 +1,18 @@
+import React from 'react'
+import Header from './components/header'
+import Game from './components/game'
+import Footer from './components/footer'
 
+import './app.css';
 
-function App() {
+export default function App() {
   return (
-    null
+    <main className="main">
+    <Header/>
+    <Game/>
+    <Footer/>
+    </main>
   );
 }
 
-export default App;
+

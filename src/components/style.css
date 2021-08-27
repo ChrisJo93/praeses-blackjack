@@ -1,0 +1,14 @@
+.header {
+    background-color: royalblue;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+	--tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+text-align: center;
+padding-top: 2rem;
+padding-bottom: 2rem;
+font-size: 2em;
+    
+
+}
