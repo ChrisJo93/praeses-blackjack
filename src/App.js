@@ -1,18 +1,12 @@
-import React from 'react'
-import Header from './components/header'
-import Game from './components/game'
-import Footer from './components/footer'
-
-import './app.css';
+import React from 'react';
+import Header from './components/header';
+import Game from './components/game';
 
 export default function App() {
   return (
-    <main className="main">
-    <Header/>
-    <Game/>
-    <Footer/>
+    <main>
+      <Header />
+      <Game />
     </main>
   );
 }
-
-

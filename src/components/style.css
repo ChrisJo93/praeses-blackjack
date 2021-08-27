@@ -1,14 +1,24 @@
 .header {
-    background-color: royalblue;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-	--tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-text-align: center;
-padding-top: 2rem;
-padding-bottom: 2rem;
-font-size: 2em;
-    
+  background-color: royalblue;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  font-size: 2em;
+}
 
+.game_container {
+  margin: auto;
+  max-width: 75%;
+  padding-top: 3rem;
+}
+
+.nice {
+  width: 10rem;
+  height: 10rem;
 }
