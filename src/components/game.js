@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import cards from '../assets/data';
 
 export default function Game() {
@@ -13,11 +13,17 @@ export default function Game() {
     newGame: null,
     stand: null,
   });
+
+  useEffect(() => {
+    setState({
+      ...state,
+      dealerHand: [state.deck[0], state.deck[10], state.deck[50]],
+    });
+  }, [state.deck]);
+
   const randomizer = (max) => {
     return Math.floor(Math.random() * max);
   };
-
-  console.log(state.deck, 'nice');
 
   const hit = (hand) => (e) => {
     let newCard;
@@ -35,17 +41,32 @@ export default function Game() {
   return (
     <section>
       <div className="game_container">
-        <div>
-          {state.dealerTotal}
-          {state.dealerHand.map((card) => (
-            <img src={card.image} />
-          ))}
+        <div className="hand_container">
+          <div className="score"> Dealer: {state.dealerTotal}</div>
+          <div className="hand">
+            {state.dealerHand.map((card) => (
+              <div className="card_container">
+                <img src={card.image} className="cards" />
+              </div>
+            ))}
+          </div>
         </div>
         <div>
-          {state.playerTotal}
-          {state.playerHand.map((card) => (
-            <img src={card.image} />
-          ))}
+          <div className="hand_container">
+            <div className="hand">
+              {state.dealerHand.map((card) => (
+                <div className="card_container">
+                  <img src={card.image} className="cards" />
+                </div>
+              ))}
+            </div>
+            <div className="score">Player: {state.dealerTotal}</div>
+          </div>
+        </div>
+        <div className="buttons">
+          <button className="button button_hit">Hit</button>
+          <button className="button button_stand">Stand</button>
+          <button className="button button_stand">New Game</button>
         </div>
       </div>
     </section>

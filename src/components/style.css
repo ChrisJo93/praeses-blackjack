@@ -13,12 +13,58 @@
 }
 
 .game_container {
-  margin: auto;
+  margin-top: 4rem;
+  margin-left: 10rem;
+  margin-right: 10rem;
+
   max-width: 75%;
-  padding-top: 3rem;
+  height: auto;
+  padding: 3rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
-.nice {
-  width: 10rem;
-  height: 10rem;
+.card_container {
+  display: flex;
+  flex-direction: row;
+
+  position: relative;
+}
+
+.cards {
+  max-height: 10rem;
+  max-width: 10rem;
+  padding-left: 1rem;
+}
+
+.hand_container {
+  margin: 1rem;
+}
+
+.hand {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.score {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  height: 2rem;
+  text-align: start;
+}
+
+.buttons {
+  display: inline-flex;
+  justify-content: center;
+  padding-left: 1rem;
+}
+
+.button {
+  padding: 1rem;
+  min-width: 7rem;
+  margin: 1rem;
 }
