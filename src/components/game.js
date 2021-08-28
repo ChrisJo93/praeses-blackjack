@@ -5,7 +5,7 @@ export default function Game() {
   const [state, setState] = useState({
     deck: cards,
     dealerHand: [],
-    dealerTotal: 0,
+    dealerTotal: 10,
     dealerTurn: null,
     playerHand: [],
     playerTotal: 0,
@@ -15,23 +15,19 @@ export default function Game() {
   });
 
   useEffect(() => {
+    if (state.dealerHand < 2) {
+      hit();
+    }
+  }, [state.dealerHand]);
+
+  const hit = (e) => {
     setState({
       ...state,
-      dealerHand: [state.deck[0], state.deck[10], state.deck[50]],
+      dealerHand: [
+        ...state.dealerHand,
+        state.deck[Math.floor(Math.random() * state.deck.length)],
+      ],
     });
-  }, [state.deck]);
-
-  const randomizer = (max) => {
-    return Math.floor(Math.random() * max);
-  };
-
-  const hit = (hand) => (e) => {
-    let newCard;
-    newCard = randomizer(cards.id);
-    if (newCard !== (state.playerHand || state.dealerHand))
-      setState({ ...state, [hand]: newCard });
-    else {
-    }
   };
 
   const stand = (person) => (e) => {};
@@ -64,9 +60,15 @@ export default function Game() {
           </div>
         </div>
         <div className="buttons">
-          <button className="button button_hit">Hit</button>
-          <button className="button button_stand">Stand</button>
-          <button className="button button_stand">New Game</button>
+          <button onClick={hit} className="button button_hit">
+            Hit
+          </button>
+          <button onClick={null} className="button button_stand">
+            Stand
+          </button>
+          <button onClick={null} className="button button_stand">
+            New Game
+          </button>
         </div>
       </div>
     </section>
