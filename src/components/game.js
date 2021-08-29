@@ -53,11 +53,23 @@ export default function Game() {
       dealerTurn: true,
       playerTurn: false,
     });
-    dealerLogic();
+    dealerLogic(1, 16);
   };
 
-  const dealerLogic = () => {
-    hit('dealerHand');
+  const dHit = () => {
+    setState({
+      ...state,
+      dealerHand: [
+        ...state.dealerHand,
+        state.deck[Math.floor(Math.random() * state.deck.length)],
+      ],
+    });
+  };
+
+  const dealerLogic = (n) => {
+    if (state.dealerTotal < 16) {
+      dHit();
+    }
   };
 
   const newGame = () => {
