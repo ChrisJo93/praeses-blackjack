@@ -3,20 +3,18 @@ import { cards, placeholder } from '../assets/data';
 
 export default function Game() {
   const [state, setState] = useState({
-    deck: cards,
+    deck: cards, //an array of objects
     dealerHand: [],
     dealerTotal: 0,
     dealerTurn: false,
     playerHand: [],
     playerTotal: 0,
     playerTurn: true,
+    discard: [],
   });
 
   useEffect(() => {
     total();
-    if (state.dealerTotal < 16) {
-      console.log(state.dealerTotal);
-    }
   }, [
     state.playerHand,
     state.dealerHand,
@@ -25,13 +23,41 @@ export default function Game() {
     state.playerTurn,
   ]);
 
-  const hit = (hand) => {
+  const hit = (hand) => (e) => {
     setState({
       ...state,
-      [hand]: [
-        ...state[hand],
-        state.deck[Math.floor(Math.random() * state.deck.length)],
-      ],
+      [hand]: [...state[hand], state.deck[getRandomCard(state.deck)]],
+    });
+  };
+
+  // removeCard()
+
+  const getRandomCard = (deck) => {
+    let newArr = deck; //set mutable array
+    let random = Math.floor(Math.random() * newArr.length); //grab random index
+    newArr.splice(random, 1);
+    console.log({ newArr: newArr, random: random });
+    return random;
+  };
+
+  const stand = () => {
+    setState({
+      ...state,
+      dealerTurn: true,
+      playerTurn: false,
+    });
+  };
+
+  const newGame = () => {
+    total();
+    setState({
+      ...state,
+      playerTotal: 0,
+      dealerTotal: 0,
+      playerHand: [],
+      dealerHand: [],
+      playerTurn: true,
+      dealerTurn: false,
     });
   };
 
@@ -44,43 +70,6 @@ export default function Game() {
       ...state,
       dealerTotal: handReducer(state.dealerHand),
       playerTotal: handReducer(state.playerHand),
-    });
-  };
-
-  const stand = () => {
-    setState({
-      ...state,
-      dealerTurn: true,
-      playerTurn: false,
-    });
-    dealerLogic(1, 16);
-  };
-
-  const dHit = () => {
-    setState({
-      ...state,
-      dealerHand: [
-        ...state.dealerHand,
-        state.deck[Math.floor(Math.random() * state.deck.length)],
-      ],
-    });
-  };
-
-  const dealerLogic = (n) => {
-    if (state.dealerTotal < 16) {
-      dHit();
-    }
-  };
-
-  const newGame = () => {
-    setState({
-      ...state,
-      playerTotal: 0,
-      dealerTotal: 0,
-      playerHand: [],
-      dealerHand: [],
-      playerTurn: true,
-      dealerTurn: false,
     });
   };
 
@@ -130,7 +119,7 @@ export default function Game() {
         </div>
         <div className="buttons">
           <button
-            onClick={() => hit('playerHand')}
+            onClick={hit('playerHand')}
             className="button button_hit"
             button
             disabled={state.dealerTurn}
@@ -138,7 +127,8 @@ export default function Game() {
             Hit
           </button>
           <button
-            onClick={() => hit('dealerHand')}
+            type="button"
+            onClick={hit('dealerHand')}
             className="button button_hit"
           >
             dealer
@@ -146,7 +136,11 @@ export default function Game() {
           <button onClick={stand} className="button button_stand">
             Stand
           </button>
-          <button onClick={newGame} className="button button_stand">
+          <button
+            type="button"
+            onClick={newGame}
+            className="button button_stand"
+          >
             New Game
           </button>
         </div>
