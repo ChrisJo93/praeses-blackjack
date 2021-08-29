@@ -6,21 +6,33 @@ export default function Game() {
     deck: cards,
     dealerHand: [],
     dealerTotal: 10,
-    dealerTurn: null,
+    dealerScore: 1,
     playerHand: [],
     playerTotal: 0,
-    playerTurn: null,
-    newGame: null,
-    stand: null,
+    playerScore: 1,
+    playerTurn: true,
   });
 
   useEffect(() => {
+    total();
     if (state.dealerHand < 2) {
-      hit();
+      newGame();
     }
-  }, [state.dealerHand]);
+  });
 
-  const hit = (e) => {
+  const hit = () => {
+    if (state.playerTurn) {
+      setState({
+        ...state,
+        playerHand: [
+          ...state.playerHand,
+          state.deck[Math.floor(Math.random() * state.deck.length)],
+        ],
+      });
+    }
+  };
+
+  const dealerHit = () => {
     setState({
       ...state,
       dealerHand: [
@@ -30,15 +42,44 @@ export default function Game() {
     });
   };
 
-  const stand = (person) => (e) => {};
+  const handReducer = (hand) => {
+    return hand.reduce((n, { value }) => n + value, 0);
+  };
 
-  const newGame = () => {};
+  const total = (e) => {
+    state.playerTotal = handReducer(state.playerHand);
+    state.dealerTotal = handReducer(state.dealerHand);
+    console.log(state.playerHand, state.dealerHand);
+  };
+
+  const stand = (e) => {
+    dealerHit();
+    setState({
+      ...state,
+      dealerTurn: true,
+      playerTurn: false,
+    });
+  };
+
+  const newGame = (e) => {
+    setState({
+      ...state,
+      playerTotal: 0,
+      dealerTotal: 0,
+      dealerHand: [state.deck[Math.floor(Math.random() * state.deck.length)]],
+      playerHand: [state.deck[Math.floor(Math.random() * state.deck.length)]],
+    });
+  };
 
   return (
     <section>
       <div className="game_container">
         <div className="hand_container">
-          <div className="score"> Dealer: {state.dealerTotal}</div>
+          <div className="total">
+            Dealer: {state.dealerTotal}
+            {state.dealerTurn ? <div>Dealer turn</div> : <div>Waiting</div>}
+          </div>
+
           <div className="hand">
             {state.dealerHand.map((card) => (
               <div className="card_container">
@@ -50,23 +91,32 @@ export default function Game() {
         <div>
           <div className="hand_container">
             <div className="hand">
-              {state.dealerHand.map((card) => (
+              {state.playerHand.map((card) => (
                 <div className="card_container">
                   <img src={card.image} className="cards" />
                 </div>
               ))}
             </div>
-            <div className="score">Player: {state.dealerTotal}</div>
+            <div className="total">
+              Player: {state.playerTotal}{' '}
+              {state.playerTurn ? <div>Your turn</div> : <div>Waiting</div>}
+            </div>
           </div>
         </div>
         <div className="buttons">
           <button onClick={hit} className="button button_hit">
             Hit
           </button>
-          <button onClick={null} className="button button_stand">
+          <button onClick={stand} className="button button_stand">
             Stand
           </button>
-          <button onClick={null} className="button button_stand">
+          <button
+            onClick={() => {
+              newGame();
+              total();
+            }}
+            className="button button_stand"
+          >
             New Game
           </button>
         </div>
