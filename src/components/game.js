@@ -5,60 +5,59 @@ export default function Game() {
   const [state, setState] = useState({
     deck: cards,
     dealerHand: [],
-    dealerTotal: 10,
-    dealerScore: 1,
+    dealerTotal: 0,
+    dealerTurn: false,
     playerHand: [],
     playerTotal: 0,
-    playerScore: 1,
     playerTurn: true,
   });
 
   useEffect(() => {
     total();
-  }, [state.playerHand, state.dealerTotal]);
-
-  const hit = () => {
-    if (state.playerTurn) {
-      setState({
-        ...state,
-        playerHand: [
-          ...state.playerHand,
-          state.deck[Math.floor(Math.random() * state.deck.length)],
-        ],
-      });
+    if (state.dealerTotal < 16) {
+      console.log(state.dealerTotal);
     }
-  };
+  }, [
+    state.playerHand,
+    state.dealerHand,
+    state.dealerTotal,
+    state.playerTotal,
+    state.playerTurn,
+  ]);
 
-  //   const dealerHit = () => {
-  //     setState({
-  //       ...state,
-  //       dealerHand: [
-  //         ...state.dealerHand,
-  //         state.deck[Math.floor(Math.random() * state.deck.length)],
-  //       ],
-  //     });
-  //   };
+  const hit = (hand) => {
+    setState({
+      ...state,
+      [hand]: [
+        ...state[hand],
+        state.deck[Math.floor(Math.random() * state.deck.length)],
+      ],
+    });
+  };
 
   const handReducer = (hand) => {
     return hand.reduce((n, { value }) => n + value, 0);
   };
 
-  const total = (e) => {
+  const total = () => {
     setState({
       ...state,
-      playerTotal: handReducer(state.playerHand),
       dealerTotal: handReducer(state.dealerHand),
+      playerTotal: handReducer(state.playerHand),
     });
-
-    state.dealerTotal = console.log(state.playerHand, state.dealerHand);
   };
 
-  const stand = (e) => {
+  const stand = () => {
     setState({
       ...state,
       dealerTurn: true,
       playerTurn: false,
     });
+    dealerLogic();
+  };
+
+  const dealerLogic = () => {
+    hit('dealerHand');
   };
 
   const newGame = () => {
@@ -69,6 +68,7 @@ export default function Game() {
       playerHand: [],
       dealerHand: [],
       playerTurn: true,
+      dealerTurn: false,
     });
   };
 
@@ -84,12 +84,12 @@ export default function Game() {
           <div className="hand">
             {state.dealerHand.length === 0 ? (
               <div className="card_container">
-                <img src={placeholder} className="cards" />
+                <img src={placeholder} className="cards" alt="Cards" />
               </div>
             ) : (
               state.dealerHand.map((card) => (
                 <div className="card_container">
-                  <img src={card.image} className="cards" />
+                  <img src={card.image} className="cards" alt="Cards" />
                 </div>
               ))
             )}
@@ -100,12 +100,12 @@ export default function Game() {
             <div className="hand">
               {state.playerHand.length === 0 ? (
                 <div className="card_container">
-                  <img src={placeholder} className="cards" />
+                  <img src={placeholder} className="cards" alt="Cards" />
                 </div>
               ) : (
                 state.playerHand.map((card) => (
                   <div className="card_container">
-                    <img src={card.image} className="cards" />
+                    <img src={card.image} className="cards" alt="Cards" />
                   </div>
                 ))
               )}
@@ -117,8 +117,19 @@ export default function Game() {
           </div>
         </div>
         <div className="buttons">
-          <button onClick={hit} className="button button_hit">
+          <button
+            onClick={() => hit('playerHand')}
+            className="button button_hit"
+            button
+            disabled={state.dealerTurn}
+          >
             Hit
+          </button>
+          <button
+            onClick={() => hit('dealerHand')}
+            className="button button_hit"
+          >
+            dealer
           </button>
           <button onClick={stand} className="button button_stand">
             Stand
