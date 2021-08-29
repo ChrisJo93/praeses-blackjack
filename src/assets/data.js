@@ -14,6 +14,8 @@ const images = importAll(
   require.context('../assets/images', false, /\.(png|jpe?g|svg)$/)
 );
 
+const placeholder = images['placeholder.png'].default;
+
 const cards = [
   { id: 1, value: 2, image: images['2_of_clubs.png'].default },
   { id: 2, value: 2, image: images['2_of_diamonds.png'].default },
@@ -81,4 +83,4 @@ const cards = [
   { id: 52, value: 11, image: images['ace_of_diamonds.png'].default },
 ];
 
-export default cards;
+export { cards, placeholder };
