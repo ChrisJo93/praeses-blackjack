@@ -26,18 +26,15 @@ export default function Game() {
   const hit = (hand) => (e) => {
     setState({
       ...state,
-      [hand]: [...state[hand], state.deck[getRandomCard(state.deck)]],
+      [hand]: [...state[hand], getRandomCard(state.deck)], //returning array item at random index
     });
   };
-
-  // removeCard()
-
+  //   state.deck[getRandomCard(state.deck)]], Return whole card instead of just a number
   const getRandomCard = (deck) => {
     let newArr = deck; //set mutable array
     let random = Math.floor(Math.random() * newArr.length); //grab random index
-    newArr.splice(random, 1);
-    console.log({ newArr: newArr, random: random });
-    return random;
+
+    return newArr[random];
   };
 
   const stand = () => {
@@ -45,6 +42,14 @@ export default function Game() {
       ...state,
       dealerTurn: true,
       playerTurn: false,
+    });
+    dealerHit();
+  };
+
+  const dealerHit = () => {
+    setState({
+      ...state,
+      dealerHand: [...state.dealerHand, getRandomCard(state.deck)], //returning array item at random index
     });
   };
 
