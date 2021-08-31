@@ -36,7 +36,12 @@ export default function Game() {
     newArr.splice(random, 1);
     console.log({ newArr: newArr, random: random });
     return random;
+    // removeCard()
   };
+
+  //   const removeCard = (deck) => {
+  //     deck.splice;
+  //   };
 
   const stand = () => {
     setState({
