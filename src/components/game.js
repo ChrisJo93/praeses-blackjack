@@ -41,28 +41,19 @@ export default function Game() {
   };
 
   useInterval(() => {
+    //the interval hook "watches" for the dealer's turn
     if (dealerTurn) {
-      //the interval hook "watches" for the dealer's turn
       dealerLogic();
     }
   }, 3000);
 
-  const hit = () => {
+  const hit = (hand) => {
     //on hit, random index of deck array is called
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
     setState({
       ...state,
-      playerHand: [...state.playerHand, state.deck[index]],
-    });
-  };
-
-  const dealerHit = () => {
-    let index = Math.floor(Math.random() * state.deck.length);
-
-    setState({
-      ...state,
-      dealerHand: [...state.dealerHand, state.deck[index]],
+      [hand]: [...state[hand], state.deck[index]],
     });
   };
 
@@ -71,10 +62,10 @@ export default function Game() {
     let player = state.playerTotal;
     switch (true) {
       case dealer < 18:
-        dealerHit();
+        hit('dealerHand');
         break;
       case player > 18 && dealer < player:
-        dealerHit();
+        hit('dealerHand');
         break;
       case dealer === player:
         checkWinner();
@@ -82,23 +73,10 @@ export default function Game() {
       default:
         checkWinner();
     }
-
-    // if (state.dealerTotal < 18) {
-    //   dealerHit();
-    // } else {
-    //   checkWinner();
-    // }
   };
 
   const stand = () => {
-    setState({
-      ...state,
-      dealerTurn: !state.dealerTurn,
-      playerTurn: !state.playerTurn,
-    });
     setDealerTurn(true);
-
-    // checkWinner();
     dealerLogic();
   };
 
@@ -156,16 +134,8 @@ export default function Game() {
         alert('You lost');
         newGame();
         break;
-      case player > 21:
-        alert('Oops, you bust. Dealer Wins');
-        newGame();
-        break;
-      case dealer > 21:
-        alert('Dealer bust, you win!');
-        newGame();
-        break;
       case dealer === player:
-        alert(`Dealer Wins with ${dealer}`);
+        alert(`It's a draw!`);
     }
   };
 
@@ -175,7 +145,7 @@ export default function Game() {
         <div className="hand_container">
           <div className="total">
             Dealer: {state.dealerTotal}
-            {state.dealerTurn ? <div>Dealer turn</div> : <div>Waiting</div>}
+            {dealerTurn ? <div>Dealer turn</div> : <div>Waiting</div>}
           </div>
 
           <div className="hand">
@@ -192,6 +162,7 @@ export default function Game() {
             )}
           </div>
         </div>
+
         <div>
           <div className="hand_container">
             <div className="hand">
@@ -213,16 +184,16 @@ export default function Game() {
             </div>
           </div>
         </div>
+
         <div className="buttons">
           <button
-            onClick={() => hit()}
+            onClick={() => hit('playerHand')}
             className="button button_hit"
             button
             disabled={dealerTurn}
           >
             Hit
           </button>
-
           <button onClick={() => stand()} className="button button_stand">
             Stand
           </button>
