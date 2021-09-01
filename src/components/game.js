@@ -13,7 +13,19 @@ export default function Game() {
 
   useEffect(() => {
     total();
-    hitScore();
+    hitBustChecker();
+    if (state.playerTotal === 21) {
+      console.log('blackjack');
+    }
+    switch (true) {
+      case state.playerTotal === 21:
+        alert('Blackjack, you win!');
+        newGame();
+        break;
+      case state.dealerTotal === 21:
+        alert('Dealer blackjack, you lose!');
+        newGame();
+    }
   }, [
     state.playerHand,
     state.dealerHand,
@@ -47,10 +59,10 @@ export default function Game() {
     }
   }, 3000);
 
-  const hit = (hand) => {
-    //on hit, random index of deck array is called
+  const handleHit = (hand) => {
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
+
     setState({
       ...state,
       [hand]: [...state[hand], state.deck[index]],
@@ -61,15 +73,19 @@ export default function Game() {
     let dealer = state.dealerTotal;
     let player = state.playerTotal;
     switch (true) {
-      case dealer < 18:
-        hit('dealerHand');
-        break;
-      case player > 18 && dealer < player:
-        hit('dealerHand');
-        break;
-      case dealer === player:
+      case dealer < 18 && dealer > player:
         checkWinner();
         break;
+      case dealer < 18:
+        handleHit('dealerHand');
+        break;
+      case player > 18 && dealer < player:
+        handleHit('dealerHand');
+        break;
+      case dealer > 18 && dealer < player:
+        checkWinner();
+        break;
+
       default:
         checkWinner();
     }
@@ -106,7 +122,7 @@ export default function Game() {
     });
   };
 
-  const hitScore = () => {
+  const hitBustChecker = () => {
     let player = state.playerTotal;
     let dealer = state.dealerTotal;
     switch (true) {
@@ -131,7 +147,7 @@ export default function Game() {
         newGame();
         break;
       case player < dealer:
-        alert('You lost');
+        alert(`You lost, dealer had ${dealer} points.`);
         newGame();
         break;
       case dealer === player:
@@ -187,7 +203,7 @@ export default function Game() {
 
         <div className="buttons">
           <button
-            onClick={() => hit('playerHand')}
+            onClick={() => handleHit('playerHand')}
             className="button button_hit"
             button
             disabled={dealerTurn}
