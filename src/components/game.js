@@ -3,45 +3,49 @@ import { cards, placeholder } from '../assets/data';
 
 export default function Game() {
   const [state, setState] = useState({
-    deck: cards, //an array of objects
+    deck: cards,
     dealerHand: [],
     dealerTotal: 0,
     dealerTurn: false,
     playerHand: [],
     playerTotal: 0,
     playerTurn: true,
-    discard: [],
   });
 
   useEffect(() => {
     total();
+    hitScore();
   }, [
     state.playerHand,
     state.dealerHand,
     state.dealerTotal,
     state.playerTotal,
     state.playerTurn,
+    state.dealerTurn,
   ]);
 
-  const hit = (hand) => (e) => {
+  const hit = () => {
+    let index = Math.floor(Math.random() * state.deck.length); //grab random index
     setState({
       ...state,
-      [hand]: [...state[hand], state.deck[getRandomCard(state.deck)]], //returning array item at random index
+      playerHand: [...state.playerHand, state.deck[index]], //returning array item at random index
     });
   };
 
-  const getRandomCard = (deck) => {
-    let newArr = deck; //set mutable array
-    let random = Math.floor(Math.random() * newArr.length); //grab random index
-    newArr.splice(random, 1);
-    console.log({ newArr: newArr, random: random });
-    return random;
-    // removeCard()
+  const dealerHit = () => {
+    let index = Math.floor(Math.random() * state.deck.length); //grab random index
+    setState({
+      ...state,
+      dealerHand: [...state.dealerHand, state.deck[index]], //returning array item at random index
+    });
   };
 
-  //   const removeCard = (deck) => {
-  //     deck.splice;
-  //   };
+  const dealerLogic = () => {
+    let hand = state.dealerTotal;
+    ///auto draw
+    //stand for dealer
+    //compare scores by calling checkWinner()
+  };
 
   const stand = () => {
     setState({
@@ -49,14 +53,9 @@ export default function Game() {
       dealerTurn: true,
       playerTurn: false,
     });
-    dealerHit();
-  };
+    dealerLogic();
 
-  const dealerHit = () => {
-    setState({
-      ...state,
-      dealerHand: [...state.dealerHand, getRandomCard(state.deck)], //returning array item at random index
-    });
+    // checkWinner();
   };
 
   const newGame = () => {
@@ -82,6 +81,45 @@ export default function Game() {
       dealerTotal: handReducer(state.dealerHand),
       playerTotal: handReducer(state.playerHand),
     });
+  };
+
+  const hitScore = () => {
+    let player = state.playerTotal;
+    let dealer = state.dealerTotal;
+    switch (true) {
+      case player > 21:
+        alert(`Oops, you bust at ${player}`);
+        newGame();
+        break;
+      case dealer > 21:
+        alert(`Dealer bust at ${dealer}`);
+        newGame();
+        break;
+    }
+  };
+
+  const checkWinner = () => {
+    let player = state.playerTotal;
+    let dealer = state.dealerTotal;
+
+    switch (true) {
+      case player > dealer:
+        alert('You win!');
+        newGame();
+        break;
+      case player < dealer:
+        alert('You lost');
+        newGame();
+        break;
+      case player > 21:
+        alert('Oops, you bust. Dealer Wins');
+        newGame();
+        break;
+      case dealer > 21:
+        alert('Dealer bust, you win!');
+        newGame();
+        break;
+    }
   };
 
   return (
@@ -130,7 +168,7 @@ export default function Game() {
         </div>
         <div className="buttons">
           <button
-            onClick={hit('playerHand')}
+            onClick={() => hit()}
             className="button button_hit"
             button
             disabled={state.dealerTurn}
@@ -139,12 +177,12 @@ export default function Game() {
           </button>
           <button
             type="button"
-            onClick={hit('dealerHand')}
+            onClick={() => dealerHit()}
             className="button button_hit"
           >
             dealer
           </button>
-          <button onClick={stand} className="button button_stand">
+          <button onClick={() => stand()} className="button button_stand">
             Stand
           </button>
           <button
