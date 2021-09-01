@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cards, placeholder } from '../assets/data';
 
 export default function Game() {
@@ -11,6 +11,7 @@ export default function Game() {
     playerTotal: 0,
     playerTurn: true,
   });
+  const [dealer, setDealer] = useState(false);
 
   useEffect(() => {
     total();
@@ -24,6 +25,30 @@ export default function Game() {
     state.dealerTurn,
   ]);
 
+  const useInterval = (callback, delay) => {
+    const savedCallback = useRef();
+
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  };
+
+  useInterval(() => {
+    if (dealer) {
+      dealerLogic();
+    }
+  }, 3000);
+
   const hit = () => {
     let index = Math.floor(Math.random() * state.deck.length); //grab random index
     setState({
@@ -34,28 +59,34 @@ export default function Game() {
 
   const dealerHit = () => {
     let index = Math.floor(Math.random() * state.deck.length); //grab random index
-    setState({
-      ...state,
-      dealerHand: [...state.dealerHand, state.deck[index]], //returning array item at random index
-    });
+    if (state.dealerTotal < 18) {
+      setState({
+        ...state,
+        dealerHand: [...state.dealerHand, state.deck[index]], //returning array item at random index
+      });
+    } else return;
   };
 
   const dealerLogic = () => {
-    let hand = state.dealerTotal;
-    ///auto draw
-    //stand for dealer
-    //compare scores by calling checkWinner()
+    let fuck = state.dealerTotal;
+    if (fuck < 18) {
+      console.log(state.dealerTotal);
+      dealerHit();
+    } else {
+      checkWinner();
+    }
   };
 
   const stand = () => {
     setState({
       ...state,
-      dealerTurn: true,
-      playerTurn: false,
+      dealerTurn: !state.dealerTurn,
+      playerTurn: !state.playerTurn,
     });
-    dealerLogic();
+    setDealer(true);
 
     // checkWinner();
+    dealerLogic();
   };
 
   const newGame = () => {
@@ -69,6 +100,7 @@ export default function Game() {
       playerTurn: true,
       dealerTurn: false,
     });
+    setDealer(false);
   };
 
   const handReducer = (hand) => {
@@ -119,6 +151,8 @@ export default function Game() {
         alert('Dealer bust, you win!');
         newGame();
         break;
+      case dealer === player:
+        alert(`Dealer Wins with ${dealer}`);
     }
   };
 
