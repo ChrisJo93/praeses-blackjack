@@ -22,6 +22,7 @@ export default function Game() {
   ]);
 
   const useInterval = (callback, delay) => {
+    //creating set interval hook
     const savedCallback = useRef();
 
     useEffect(() => {
@@ -41,36 +42,52 @@ export default function Game() {
 
   useInterval(() => {
     if (dealerTurn) {
+      //the interval hook "watches" for the dealer's turn
       dealerLogic();
     }
   }, 3000);
 
   const hit = () => {
-    let index = Math.floor(Math.random() * state.deck.length); //grab random index
+    //on hit, random index of deck array is called
+    //Future fix: splice out random index as it's called.
+    let index = Math.floor(Math.random() * state.deck.length);
     setState({
       ...state,
-      playerHand: [...state.playerHand, state.deck[index]], //returning array item at random index
+      playerHand: [...state.playerHand, state.deck[index]],
     });
   };
 
   const dealerHit = () => {
-    let index = Math.floor(Math.random() * state.deck.length); //grab random index
-    if (state.dealerTotal < 18) {
-      setState({
-        ...state,
-        dealerHand: [...state.dealerHand, state.deck[index]], //returning array item at random index
-      });
-    } else return;
+    let index = Math.floor(Math.random() * state.deck.length);
+
+    setState({
+      ...state,
+      dealerHand: [...state.dealerHand, state.deck[index]],
+    });
   };
 
   const dealerLogic = () => {
-    let fuck = state.dealerTotal;
-    if (fuck < 18) {
-      console.log(state.dealerTotal);
-      dealerHit();
-    } else {
-      checkWinner();
+    let dealer = state.dealerTotal;
+    let player = state.playerTotal;
+    switch (true) {
+      case dealer < 18:
+        dealerHit();
+        break;
+      case player > 18 && dealer < player:
+        dealerHit();
+        break;
+      case dealer === player:
+        checkWinner();
+        break;
+      default:
+        checkWinner();
     }
+
+    // if (state.dealerTotal < 18) {
+    //   dealerHit();
+    // } else {
+    //   checkWinner();
+    // }
   };
 
   const stand = () => {
