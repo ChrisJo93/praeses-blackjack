@@ -6,12 +6,10 @@ export default function Game() {
     deck: cards,
     dealerHand: [],
     dealerTotal: 0,
-    dealerTurn: false,
     playerHand: [],
     playerTotal: 0,
-    playerTurn: true,
   });
-  const [dealer, setDealer] = useState(false);
+  const [dealerTurn, setDealerTurn] = useState(false);
 
   useEffect(() => {
     total();
@@ -21,8 +19,6 @@ export default function Game() {
     state.dealerHand,
     state.dealerTotal,
     state.playerTotal,
-    state.playerTurn,
-    state.dealerTurn,
   ]);
 
   const useInterval = (callback, delay) => {
@@ -44,7 +40,7 @@ export default function Game() {
   };
 
   useInterval(() => {
-    if (dealer) {
+    if (dealerTurn) {
       dealerLogic();
     }
   }, 3000);
@@ -83,7 +79,7 @@ export default function Game() {
       dealerTurn: !state.dealerTurn,
       playerTurn: !state.playerTurn,
     });
-    setDealer(true);
+    setDealerTurn(true);
 
     // checkWinner();
     dealerLogic();
@@ -100,7 +96,7 @@ export default function Game() {
       playerTurn: true,
       dealerTurn: false,
     });
-    setDealer(false);
+    setDealerTurn(false);
   };
 
   const handReducer = (hand) => {
@@ -205,17 +201,11 @@ export default function Game() {
             onClick={() => hit()}
             className="button button_hit"
             button
-            disabled={state.dealerTurn}
+            disabled={dealerTurn}
           >
             Hit
           </button>
-          <button
-            type="button"
-            onClick={() => dealerHit()}
-            className="button button_hit"
-          >
-            dealer
-          </button>
+
           <button onClick={() => stand()} className="button button_stand">
             Stand
           </button>
