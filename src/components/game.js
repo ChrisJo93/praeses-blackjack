@@ -63,6 +63,11 @@ export default function Game() {
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
 
+    for (let j = 0; j < state[hand].length; j++) {
+      state.deck.filter((item) => item === state[hand][j]);
+      console.log(state.deck.filter((item) => item === state[hand][j]));
+    }
+
     setState({
       ...state,
       [hand]: [...state[hand], state.deck[index]],
@@ -152,6 +157,8 @@ export default function Game() {
         break;
       case dealer === player:
         alert(`It's a draw!`);
+        newGame();
+        break;
     }
   };
 
