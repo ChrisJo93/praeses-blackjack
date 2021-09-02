@@ -16,13 +16,10 @@
 }
 
 .game_container {
-  margin-top: 4rem;
   margin-left: 10rem;
   margin-right: 10rem;
-
   max-width: 75%;
   height: auto;
-  padding: 3rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;

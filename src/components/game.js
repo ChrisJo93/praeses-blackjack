@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cards, placeholder } from '../assets/data';
+import Swal from 'sweetalert2';
 
 export default function Game() {
   const [state, setState] = useState({
@@ -13,10 +14,6 @@ export default function Game() {
 
   useEffect(() => {
     total();
-    hitBustChecker();
-    if (state.playerTotal === 21) {
-      console.log('blackjack');
-    }
     switch (true) {
       case state.playerTotal === 21:
         alert('Blackjack, you win!');
@@ -25,6 +22,9 @@ export default function Game() {
       case state.dealerTotal === 21:
         alert('Dealer blackjack, you lose!');
         newGame();
+        break;
+      default:
+        return null;
     }
   }, [
     state.playerHand,
@@ -36,7 +36,6 @@ export default function Game() {
   const useInterval = (callback, delay) => {
     //creating set interval hook
     const savedCallback = useRef();
-
     useEffect(() => {
       savedCallback.current = callback;
     }, [callback]);
@@ -62,16 +61,18 @@ export default function Game() {
   const handleHit = (hand) => {
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
-
+    let filteredDeck = [];
     for (let j = 0; j < state[hand].length; j++) {
-      state.deck.filter((item) => item === state[hand][j]);
-      console.log(state.deck.filter((item) => item === state[hand][j]));
+      filteredDeck.push(state.deck.filter((item) => item === state[hand][j]));
+      console.log(filteredDeck);
     }
 
     setState({
       ...state,
       [hand]: [...state[hand], state.deck[index]],
     });
+    hitBustChecker();
+    console.log(state.playerHand);
   };
 
   const dealerLogic = () => {
@@ -132,7 +133,7 @@ export default function Game() {
     let dealer = state.dealerTotal;
     switch (true) {
       case player > 21:
-        alert(`Oops, you bust at ${player}`);
+        Swal.fire(`Oops, you bust at ${player}`);
         newGame();
         break;
       case dealer > 21:
@@ -151,7 +152,11 @@ export default function Game() {
         alert('You win!');
         newGame();
         break;
-      case player < dealer:
+      case dealer > 21:
+        alert(`Dealer bust at ${dealer}`);
+        newGame();
+        break;
+      case player < dealer && dealer < 22:
         alert(`You lost, dealer had ${dealer} points.`);
         newGame();
         break;
@@ -159,6 +164,8 @@ export default function Game() {
         alert(`It's a draw!`);
         newGame();
         break;
+      default:
+        return null;
     }
   };
 
