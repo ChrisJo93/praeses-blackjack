@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { cards, placeholder } from '../assets/data';
+import { cards, placeholder, winner } from '../assets/data';
 import Swal from 'sweetalert2';
 
 export default function Game() {
@@ -61,11 +61,6 @@ export default function Game() {
   const handleHit = (hand) => {
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
-    let filteredDeck = [];
-    for (let j = 0; j < state[hand].length; j++) {
-      filteredDeck.push(state.deck.filter((item) => item === state[hand][j]));
-      console.log(filteredDeck);
-    }
 
     setState({
       ...state,
@@ -91,7 +86,6 @@ export default function Game() {
       case dealer > 18 && dealer < player:
         checkWinner();
         break;
-
       default:
         checkWinner();
     }
@@ -133,13 +127,15 @@ export default function Game() {
     let dealer = state.dealerTotal;
     switch (true) {
       case player > 21:
-        Swal.fire(`Oops, you bust at ${player}`);
+        Swal.fire(`You bust at ${player}`);
         newGame();
         break;
       case dealer > 21:
-        alert(`Dealer bust at ${dealer}`);
+        Swal.fire(`Dealer bust at ${dealer}`);
         newGame();
         break;
+      default:
+        return null;
     }
   };
 
@@ -148,20 +144,33 @@ export default function Game() {
     let dealer = state.dealerTotal;
 
     switch (true) {
+      case state.playerTotal === 21:
+        Swal.fire('Blackjack, you win!');
+        newGame();
+        break;
+      case state.dealerTotal === 21:
+        Swal.fire('Dealer blackjack, you lose!');
+        newGame();
+        break;
       case player > dealer:
-        alert('You win!');
+        Swal.fire({
+          title: `You win! ${player}`,
+          width: 600,
+          padding: '3em',
+          background: `#6b5 url(${winner}) no-repeat`,
+        });
         newGame();
         break;
       case dealer > 21:
-        alert(`Dealer bust at ${dealer}`);
+        Swal.fire(`You win, Dealer bust at ${dealer}`);
         newGame();
         break;
       case player < dealer && dealer < 22:
-        alert(`You lost, dealer had ${dealer} points.`);
+        Swal.fire(`You lost, dealer had ${dealer} points.`);
         newGame();
         break;
       case dealer === player:
-        alert(`It's a draw!`);
+        Swal.fire(`It's a draw!`);
         newGame();
         break;
       default:
@@ -192,7 +201,6 @@ export default function Game() {
             )}
           </div>
         </div>
-
         <div>
           <div className="hand_container">
             <div className="hand">
@@ -210,7 +218,7 @@ export default function Game() {
             </div>
             <div className="total">
               Player: {state.playerTotal}{' '}
-              {state.playerTurn ? <div>Your turn</div> : <div>Waiting</div>}
+              {!dealerTurn ? <div>Your turn</div> : <div>Waiting</div>}
             </div>
           </div>
         </div>

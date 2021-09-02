@@ -15,6 +15,7 @@ const images = importAll(
 );
 
 const placeholder = images['placeholder.png'].default;
+const winner = images['winner.png'].default;
 
 const cards = [
   { id: 1, value: 2, image: images['2_of_clubs.png'].default },
@@ -83,4 +84,4 @@ const cards = [
   { id: 52, value: 11, image: images['ace_of_spades.png'].default },
 ];
 
-export { cards, placeholder };
+export { cards, placeholder, winner };
