@@ -147,12 +147,12 @@ export default function Game() {
     let dealer = state.dealerTotal;
 
     switch (true) {
-      case state.playerTotal === 21:
-        alert('Blackjack, you win!');
+      case player === 21 && state.playerHand.length < 3:
+        alert('Natural Blackjack, you win!');
         newGame();
         break;
-      case state.dealerTotal === 21:
-        alert('Dealer blackjack, you lose!');
+      case dealer === 21 && state.dealerHand.length < 3:
+        alert('You lose, Dealer has natural blackjack!');
         newGame();
         break;
       case player > dealer:
