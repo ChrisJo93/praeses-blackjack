@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { cards, placeholder, winner } from '../assets/data';
+import { cards, placeholder } from '../assets/data';
 
 export default function Game() {
   const [state, setState] = useState({
@@ -58,6 +58,7 @@ export default function Game() {
   }, 3000);
 
   const handleHit = (hand) => {
+    //Using dynamic values, this function handles both player's hitting.
     //Future fix: splice out random index as it's called.
     let index = Math.floor(Math.random() * state.deck.length);
 
@@ -66,10 +67,10 @@ export default function Game() {
       [hand]: [...state[hand], state.deck[index]],
     });
     hitBustChecker();
-    console.log(state.playerHand);
   };
 
   const dealerLogic = () => {
+    //determine what the dealer will do with each card draw
     let dealer = state.dealerTotal;
     let player = state.playerTotal;
     switch (true) {
@@ -91,6 +92,7 @@ export default function Game() {
   };
 
   const stand = () => {
+    //ends player turn, greys out "hit" button, and starts dealer action
     setDealerTurn(true);
     dealerLogic();
   };
@@ -110,6 +112,7 @@ export default function Game() {
   };
 
   const handReducer = (hand) => {
+    //deconstructing the "card" object for its value. Adding that value here and passing it each player's hand.
     return hand.reduce((n, { value }) => n + value, 0);
   };
 
@@ -124,6 +127,7 @@ export default function Game() {
   const hitBustChecker = () => {
     let player = state.playerTotal;
     let dealer = state.dealerTotal;
+    //watching for hits that cause a player to bust. Would not play nice in the "checkwinner" function.
     switch (true) {
       case player > 21:
         alert(`You bust at ${player}`);

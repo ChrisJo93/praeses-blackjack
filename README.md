@@ -2,8 +2,8 @@
 
 Before you get started, make sure you have the following software installed on your computer:
 
-> NPM
-> Node.js
+- NPM
+- Node.js
 
 ## Cloning and Running
 
@@ -15,7 +15,7 @@ To run, cd into the directory containing the react application and type `npm sta
 ## Code Tree
 
 - src/ contains the React application
-- src/assets contains resources such as images for the Blackjack Game.
+- src/assets contains resources such as images and import logic for the Blackjack Game.
 - src/components is where the actual game logic exists.
 
-The game code is fairly commented with cursory information for what each function does.
+The game code is fairly commented with information for what each function does.
