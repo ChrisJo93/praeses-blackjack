@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cards, placeholder, winner } from '../assets/data';
-import Swal from 'sweetalert2';
 
 export default function Game() {
   const [state, setState] = useState({
@@ -127,11 +126,11 @@ export default function Game() {
     let dealer = state.dealerTotal;
     switch (true) {
       case player > 21:
-        Swal.fire(`You bust at ${player}`);
+        alert(`You bust at ${player}`);
         newGame();
         break;
       case dealer > 21:
-        Swal.fire(`Dealer bust at ${dealer}`);
+        alert(`Dealer bust at ${dealer}`);
         newGame();
         break;
       default:
@@ -145,32 +144,27 @@ export default function Game() {
 
     switch (true) {
       case state.playerTotal === 21:
-        Swal.fire('Blackjack, you win!');
+        alert('Blackjack, you win!');
         newGame();
         break;
       case state.dealerTotal === 21:
-        Swal.fire('Dealer blackjack, you lose!');
+        alert('Dealer blackjack, you lose!');
         newGame();
         break;
       case player > dealer:
-        Swal.fire({
-          title: `You win! ${player}`,
-          width: 600,
-          padding: '3em',
-          background: `#6b5 url(${winner}) no-repeat`,
-        });
+        alert(`You win with ${player} points!`);
         newGame();
         break;
       case dealer > 21:
-        Swal.fire(`You win, Dealer bust at ${dealer}`);
+        alert(`You win, Dealer bust at ${dealer}`);
         newGame();
         break;
       case player < dealer && dealer < 22:
-        Swal.fire(`You lost, dealer had ${dealer} points.`);
+        alert(`You lost, dealer had ${dealer} points.`);
         newGame();
         break;
       case dealer === player:
-        Swal.fire(`It's a draw!`);
+        alert(`It's a draw!`);
         newGame();
         break;
       default:
